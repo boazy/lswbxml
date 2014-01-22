@@ -1,3 +1,8 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
+deploy:
+  api_key:
+    secure: QxaKEoYntPrY8LooUtUISBI0JlSRLMgcU6O8xWesCAnHf6BxkVRkYcpEz/xKy+11aZs1Dq4/BOZ+/Xn62atNDEm6iM923NAt8dh/gq9kFjLHeVO/5QSMOCsGrVeWO6AE86/V3YGVs312bGdYI4+u9P9RQExcaP1Q2nPndlchNvc=
+  email: boazyan@gmail.com
+  provider: npm
