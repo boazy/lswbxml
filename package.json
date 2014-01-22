@@ -4,7 +4,7 @@
   "description": "lswbxml",
   "version": "0.1.1",
   "repository": {
-    "url": "https://github.com/boazy/lswbxml"
+    "url": "https://github.com/boazy/lswbxml.git"
   },
   "main": "./lib/index.js",
   "dependencies": {
