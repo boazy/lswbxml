@@ -23,7 +23,6 @@
     "diveSync": "~0.2.0",
     "benchmark": "~1.0.0",
     "prettyjson": "~0.10.0",
-    "expectThat.mocha": "~0.2.2",
     "chai": "~1.8.1",
     "chai-things": "~0.2.0",
     "stream-to-buffer": "~0.1.0"
