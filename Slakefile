@@ -145,7 +145,3 @@ check-error = (err)->
   else
     console.log "Build successful."
   false
-
-
-  #data = fs.read-file-sync file, 'utf8'
-  #fs.write-file-sync file, BDD_WRAPPER_HEADER + data + BDD_WRAPPER_FOOTER
