@@ -46,9 +46,45 @@ class Decoder extends Transform
     @_buffers = []
     @_buffers_len = 0
 
+  @decode = !(src, options, cb)->
+    decoder = new Decoder options
+    obj = null
+    if src.pipe?
+      decoder
+        ..on \error, !(err)->
+          cb err, null
+        ..on \readable, !->
+          obj := decoder.read!
+        ..on \end, !->
+          if obj? then cb null, obj
+          else cb Error("Incomplete WBXML stream"), null
+      src.pipe decoder
+    else
+      # src is chunk, so we call _transform() directly
+      # Monkey-patch decoder object to simplify processing
+      err = null
+      decoder.push = !(pushed-obj)->
+        obj := pushed-obj
+      decoder.emit = !(event, data)->
+        err := data if event is 'error'
+      <-! decoder._transform src, null
+      if err? then cb err, null
+      else if not obj? then cb Error("Incomplete WBXML stream"), null
+      else cb null, obj
+
+  @decode-sync = (src, options)->
+    throw Error("Stream decoding must be asynchronous!") if src.pipe?
+    result = null
+    @decode src, options, !(err, obj)->
+      throw err if err
+      result := obj
+    throw Error("Unexpected condition") if not result?
+    result
+
   _flush_buffers: (last-chunk, binary)->
     if @_buffers.length > 0
-      consolidated = Buffer.concat @_buffers ++ last-chunk, @_buffers_len + last-chunk.length
+      @_buffers.push last-chunk
+      consolidated = Buffer.concat @_buffers, @_buffers_len + last-chunk.length
     else
       consolidated = last-chunk
 
@@ -65,10 +101,6 @@ class Decoder extends Transform
     @_mb_val = 0
     @_is_mb = true
 
-  _flush: !(done)->
-    @push @_
-    done!
-
   _transform: !(chunk, encoding, done)->
     clen = chunk.length
     if clen == 0
@@ -81,7 +113,7 @@ class Decoder extends Transform
           b = chunk[i]
           @_mb_val .<<.= 7
           @_mb_val = b .&. 0x7f
-          throw "mb_u_int32 overflow (could be invalid or malicious WBXML)!" if @mb_val > 0xFFFFFFFF
+          throw "mb_u_int32 overflow (could be invalid or malicious WBXML)!" if @_mb_val > 0xFFFFFFFF
           @_is_mb = b .&. 0x80
           continue if @_is_mb
 
@@ -120,7 +152,7 @@ class Decoder extends Transform
             @_state = states.token
             #debug "STR-I #entire-str"
           else
-            @_buffers ++= chunk.slice i, clen
+            @_buffers.push (chunk.slice i, clen)
             @_buffers_len += clen - i
             return done! # chunk exhausted
         case states.opaque_size
@@ -137,7 +169,7 @@ class Decoder extends Transform
             @_state = states.token
             #debug "OPAQUE: #{opaque-data.inspect!}"
           else
-            @_buffers ++= chunk.slice i, clen
+            @_buffers.push (chunk.slice i, clen)
             @_buffers_len += clen - i
             return done! # chunk exhausted
         case states.switch_page

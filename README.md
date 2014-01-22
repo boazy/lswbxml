@@ -18,6 +18,73 @@ Parsing WBXML
 require! fs
 wbxml = require \lswbxml
 
+# With streams
+file = fs.create-read-stream 'example.wbxml'
+<-! file.on \open
+wbxml.decode file, language: \ActiveSync, (err, obj)->
+  throw err if err
+  console.log 'Parsed WBXML:'
+  console.log obj
+
+# With buffers (synchronous)
+buf = fs.read-file-sync 'example.wbxml'
+obj = wbxml.decode-sync buf, language: \ActiveSync
+console.log 'Parsed WBXML:'
+console.log obj
+```
+
+### CoffeeScript: ###
+```CoffeeScript
+fs = require 'fs'
+wbxml = require 'lswbxml'
+
+# With streams
+file = fs.createReadStream 'example.wbxml'
+file.on 'open', ->
+  wbxml.decode file, language: 'ActiveSync', (err, obj)->
+    throw err if err
+    console.log 'Parsed WBXML:'
+    console.log obj
+
+# With buffers (synchronous)
+buf = fs.readFileSync 'example.wbxml'
+obj = wbxml.decodeSync buf, language: 'ActiveSync'
+console.log 'Parsed WBXML:'
+console.log obj
+```
+
+### JavaScript ###
+```js
+fs = require('fs');
+wbxml = require('lswbxml');
+
+// With streams
+file = fs.createReadStream('example.wbxml');
+file.on('open', function() {
+  wbxml.decode(file, {language: 'ActiveSync'}, function(err, obj) {
+    if (err) {
+      throw err;
+    }
+    console.log('Parsed WBXML:');
+    console.log(obj);
+  });
+});
+
+// With buffers (synchronous)
+buf = fs.readFileSync('example.wbxml');
+obj = wbxml.decodeSync(buf, {language: 'ActiveSync'});
+console.log('Parsed WBXML:');
+console.log(obj);
+```
+
+Parsing WBXML stream
+--------------------
+
+### LiveScript: ###
+```LiveScript
+require! fs
+wbxml = require \lswbxml
+
 file = fs.create-read-stream 'example.wbxml'
 <-! file.on \open
 obj = null
@@ -30,6 +97,7 @@ decoder = new wbxml.Decoder language: \ActiveSync
     throw Error("Incomplete WBXML stream") if not obj?
     console.log 'Parsed WBXML:'
     console.log obj
+file.pipe decoder
 ```
 
 ### CoffeeScript: ###
@@ -49,9 +117,10 @@ file.on 'open', ->
       throw Error("Incomplete WBXML stream") if obj is null
       console.log 'Parsed WBXML:'
       console.log obj
+  file.pipe decoder
 ```
 
-### Javascript: ###
+### JavaScript: ###
 ```js
 fs = require('fs');
 wbxml = require('lswbxml');
@@ -73,6 +142,7 @@ file.on('open', function() {
     console.log('Parsed WBXML:');
     console.log(obj);
   });
+  file.pipe(decoder);
 });
 ```
 

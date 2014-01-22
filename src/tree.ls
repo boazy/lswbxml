@@ -5,7 +5,7 @@ safe-add-child = !(obj, name, child)->
   if obj[name]?
     cur-child = obj[name]
     if Array.is-array cur-child
-      obj[name] ++= child
+      cur-child.push child
     else
       obj[name] = [cur-child, child]
   else
@@ -23,14 +23,14 @@ export class WbxmlElement extends WbxmlNode
 
   add-child: !(child)->
     # Add new child to ordered list of children
-    @children ++= child
+    @children.push child
     safe-add-child @, child.name, child
 
   add-content: !(new-content)->
-    @children ++= [new-content]
+    @children.push new-content
     if @content?
       if @content instanceof Buffer and new-content instanceof Buffer
-        @content = Buffer.concat[@content, new-content]
+        @content = Buffer.concat [@content, new-content]
       else
         @content += new-content
     else

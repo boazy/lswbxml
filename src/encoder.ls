@@ -42,6 +42,29 @@ export class Encoder extends Transform
     @_pages = @language.codepages
     @_page = @_pages.0
 
+  @encode = (obj, dest, options)->
+    encoder = new Encoder(options)
+      ..on \error, !(err)->
+        dest.emit \error, err
+
+    encoder.pipe dest
+    encoder.end obj
+
+  @encode-sync = (obj, options)->
+    encoder = new Encoder(options)
+      ..on \error, !(err)->
+        throw err
+
+    buffers = []
+    buffers-len = 0
+    encoder.push = !(buf)->
+      buffers.push buf
+      buffers-len += buf.length
+
+    encoder._write_header!
+    encoder._write_obj obj
+    Buffer.concat buffers, buffers-len
+  
   _write_header: !->
     # Push WBXML header
     @push Buffer Array do
