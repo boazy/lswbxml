@@ -1,0 +1,7 @@
+/* MacOS */
+.DS_Store
+
+/* NPM */
+/node_modules
+/testjs
+npm*

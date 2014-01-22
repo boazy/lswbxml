@@ -1,0 +1,38 @@
+{
+  "author": "Boaz Yaniv (boazy@agatsolutions.com",
+  "name": "ActiveTest",
+  "description": "ActiveTest",
+  "version": "0.0.1",
+  "repository": {
+    "url": "__repository__"
+  },
+  "main": "./lib/index.js",
+  "bin": {
+    "actest": "./bin/actest.js"
+  },
+  "dependencies": {
+    "LiveScript": "~1.2.0",
+    "prelude-ls": "~1.0.3",
+    "simple-enum": "0.0.3",
+    "mocha": "~1.17.0",
+    "buffertools": "~2.0.1"
+  },
+  "devDependencies": {
+    "gaze": "~0.4.3",
+    "mkdirp": "~0.3.5",
+    "diveSync": "~0.2.0",
+    "benchmark": "~1.0.0",
+    "prettyjson": "~0.10.0",
+    "expectThat.mocha": "~0.2.2",
+    "chai": "~1.8.1",
+    "chai-things": "~0.2.0",
+    "stream-to-buffer": "~0.1.0"
+  },
+  "scripts": {
+    "test": "slake test"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": ">=0.10"
+  }
+}
