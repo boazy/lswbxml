@@ -1,13 +1,16 @@
-exports = module.exports =
+require! _: lodash
+
+_.extend exports, do
   Decoder: require \./decoder
   Encoder: require \./encoder
   Language: require \./language
   languages: require \./builtin-languages
 
-exports.decode = exports.Decoder.decode
-exports.encode = exports.Encoder.encode
-exports.decode-sync = exports.Decoder.decode-sync
-exports.encode-sync = exports.Encoder.encode-sync
+_.extend exports, do
+  decode: exports.Decoder.decode
+  encode: exports.Encoder.encode
+  decode-sync: exports.Decoder.decode-sync
+  encode-sync: exports.Encoder.encode-sync
 
 require! \./tree
 for k, v of tree
