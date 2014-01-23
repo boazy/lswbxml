@@ -25,7 +25,7 @@
     "stream-to-buffer": "~0.1.0"
   },
   "scripts": {
-    "build": "slake build",
+    "prepublish": "slake build",
     "test": "slake test"
   },
   "optionalDependencies": {},
