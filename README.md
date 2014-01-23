@@ -21,7 +21,7 @@ wbxml = require \lswbxml
 # With streams
 file = fs.create-read-stream 'example.wbxml'
 <-! file.on \open
-wbxml.decode file, language: \ActiveSync, (err, obj)->
+wbxml.decode file, language: \ActiveSync, !(err, obj)->
   throw err if err
   console.log 'Parsed WBXML:'
   console.log obj
