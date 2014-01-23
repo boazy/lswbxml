@@ -37,13 +37,15 @@ slobber = (filename, contents)->
   say "* #filename"
 
 build = !(cb)->
-  clean ->
-    compile cb
+  <-! clean
+  compile cb
 
 build-test = !(cb)->
-  <- clean
-  err <- compile
-  cb err if err
+  <-! clean
+  err <-! compile
+  if err
+    if cb? then cb err
+    else throw err
   test cb
 
 test = !(cb)->
@@ -95,9 +97,11 @@ compile-ls = !(src-dir, {transform-path, postprocess=default-post-proc}, cb)-->
         |> (postprocess out-file, _)
         |> (slobber out-file, _)
   catch err
-    cb err
-    return
-  cb null
+    if cb? then
+      cb err
+      return
+    else throw err
+  cb null if cb?
 
 compile = compile-ls 'src/' do
   transform-path: (base-path)->
