@@ -10,10 +10,10 @@ function bidi-map-cps(cps)
   for cpid, cp of cps
     # Make a bidi mapping only of the numbers inside the code-page
     for k, v of cp
-      if typeof k == 'number'
-        cp[v] = k
-    cp.CodepageID = parseInt(cpid)
-  cps |> Obj.map bidi-map
+      if k is /^[0-9]+$/ # an index number
+        cp[v] = parse-int k
+    cp.CodepageID = parse-int cpid
+  cps
 
 function dict-len(dict)
   (dict |> Object.keys) .length
