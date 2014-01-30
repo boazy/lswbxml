@@ -22,6 +22,10 @@ export class WbxmlElement extends WbxmlNode
     else
       @name
 
+  # Returns content as integer, NaN if content not exists or not an integer
+  int:~ ->
+    parse-int @content
+
   add-child: !(child)->
     # Add new child to ordered list of children
     @children.push child
