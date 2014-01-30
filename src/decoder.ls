@@ -20,7 +20,7 @@ if process.env.NODE_DEBUG is /\bwbxml\b/
 else
   debug = !->
 
-Number.prototype.to-hex = ->
+to-hex = (num)->
   "0x#{@to-string(16)}"
 
 class Decoder extends Transform
@@ -175,12 +175,12 @@ class Decoder extends Transform
         case states.switch_page
           page-num = chunk[i]
           if not @_page = @_pages[page-num]
-            throw "Codepage not found: #{page-num.to-hex!}"
-          #debug "Switch page to #{@_page.Namespace} (#{page-num.to-hex!})"
+            throw "Codepage not found: #{to-hex page-num}"
+          #debug "Switch page to #{@_page.Namespace} (#{to-hex page-num})"
           @_state = states.token
         case states.token
           token = chunk[i]
-          #debug "TOKEN: #{token.to-hex!}"
+          #debug "TOKEN: #{to-hex token}"
           switch token
           case tokens.SWITCH_PAGE
             @_state = states.switch_page
@@ -206,13 +206,13 @@ class Decoder extends Transform
             if tag-code < 0x05
               # When literals are supported this should be '< 0x04'
               token-name = "UNKNOWN" if not token-name = tokens[token]
-              throw "Unsupported special WBXML token: #token-name (#{token.to-hex!}))"
+              throw "Unsupported special WBXML token: #token-name (#{to-hex token}))"
 
             if token .&. 0x80
-              throw "Attributes are not supported! Token: #{token.to-hex!}"
+              throw "Attributes are not supported! Token: #{to-hex token}"
             has-children = token .&. 0x40
             if not tag = @_page[tag-code]
-              throw "Unknown tag #{tag-code.to-hex!} in #{@_page.Namespace}"
+              throw "Unknown tag #{to-hex tag-code} in #{@_page.Namespace}"
             
             new-element = new WbxmlElement(tag, @_element)
             new-element.namespace = @_page.Namespace

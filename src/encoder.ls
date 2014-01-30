@@ -10,9 +10,6 @@ if process.env.NODE_DEBUG is /\bwbxml\b/
 else
   debug = !->
 
-Number.prototype.to-hex = ->
-  "0x#{@to-string(16)}"
-
 to-mbuint32 = (intval)->
   throw "Multibyte value should fit in a uint32" if intval >= 0xFFFFFFFF
   result = Buffer 5

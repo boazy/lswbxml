@@ -14,6 +14,7 @@ safe-add-child = !(obj, name, child)->
 export class WbxmlElement extends WbxmlNode
   (@name, @parent)->
     @children = []
+    @$$ = @children
 
   full-name:~ ->
     if @namespace?
@@ -92,6 +93,38 @@ export function create-tree(obj)
       else
         me.namespace = parent?.namespace
 
+      obj = obj.to-string! if typeof obj is \number
+      if typeof obj is 'string' or obj instanceof Buffer
+        me.add-content obj
+      else
+        for k, v of obj
+          child = make-tree k, v, me
+          me.add-child child
+      me
+
+  for k, v of obj
+    # Use just the first property of obj as the root node
+    return make-tree k, v, null
+  else
+    throw Error "Empty object"
+
+export function create-treex(obj)
+  make-tree = (name, obj, parent)->
+    if Array.is-array obj
+      for v in obj
+        child = make-tree name, v, parent
+        parent.add-child child
+    else
+      name-parts = name.split ':'
+      namespace = name-parts[til -1].join ':'
+      name = name-parts[*-1]
+      me = new WbxmlElement(name, parent)
+      if namespace
+        me.namespace = namespace
+      else
+        me.namespace = parent?.namespace
+
+      obj = obj.to-string! if typeof obj is \number
       if typeof obj is 'string' or obj instanceof Buffer
         me.add-content obj
       else
