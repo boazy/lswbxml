@@ -22,9 +22,26 @@ export class WbxmlElement extends WbxmlNode
     else
       @name
 
+  # Ensure child is return as multiple array items, 
+  # even if there are zero one children with this name
+  # Usage: arr = node.multi (.child)
+  multi: (accessor)->
+    child = accessor @
+    if child?
+      if Array.is-array child
+        child
+      else
+        [child]
+    else
+      return []
+
   # Returns content as integer, NaN if content not exists or not an integer
   int:~ ->
     parse-int @content
+
+  maybe-int:~ ->
+    i = parse-int @content
+    if Number.is-NaN i then @content else i
 
   add-child: !(child)->
     # Add new child to ordered list of children
@@ -84,9 +101,7 @@ export class WbxmlElement extends WbxmlNode
 export function create-tree(obj)
   make-tree = (name, obj, parent)->
     if Array.is-array obj
-      for v in obj
-        child = make-tree name, v, parent
-        parent.add-child child
+      [make-tree(name, v, parent) for v in obj]
     else
       name-parts = name.split ':'
       namespace = name-parts[til -1].join ':'
@@ -102,39 +117,11 @@ export function create-tree(obj)
         me.add-content obj
       else
         for k, v of obj
-          child = make-tree k, v, me
-          me.add-child child
-      me
-
-  for k, v of obj
-    # Use just the first property of obj as the root node
-    return make-tree k, v, null
-  else
-    throw Error "Empty object"
-
-export function create-treex(obj)
-  make-tree = (name, obj, parent)->
-    if Array.is-array obj
-      for v in obj
-        child = make-tree name, v, parent
-        parent.add-child child
-    else
-      name-parts = name.split ':'
-      namespace = name-parts[til -1].join ':'
-      name = name-parts[*-1]
-      me = new WbxmlElement(name, parent)
-      if namespace
-        me.namespace = namespace
-      else
-        me.namespace = parent?.namespace
-
-      obj = obj.to-string! if typeof obj is \number
-      if typeof obj is 'string' or obj instanceof Buffer
-        me.add-content obj
-      else
-        for k, v of obj
-          child = make-tree k, v, me
-          me.add-child child
+          children = make-tree k, v, me
+          if Array.is-array children
+            children.for-each -> me.add-child it
+          else
+            me.add-child children
       me
 
   for k, v of obj
