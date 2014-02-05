@@ -102,6 +102,8 @@ export function create-tree(obj)
   make-tree = (name, obj, parent)->
     if Array.is-array obj
       [make-tree(name, v, parent) for v in obj]
+    else if typeof obj is \undefined
+      []
     else
       name-parts = name.split ':'
       namespace = name-parts[til -1].join ':'
@@ -113,7 +115,7 @@ export function create-tree(obj)
         me.namespace = parent?.namespace
 
       obj = obj.to-string! if typeof obj is \number
-      if typeof obj is 'string' or obj instanceof Buffer
+      if typeof obj is \string or obj instanceof Buffer
         me.add-content obj
       else
         for k, v of obj

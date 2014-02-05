@@ -1,7 +1,7 @@
 wbxml = require \../lib
 
 describe \Tree !->
-  tree-obj = do
+  tree-obj =
     Root:
       Main:
         Str: 'Foo'
@@ -13,7 +13,7 @@ describe \Tree !->
             Other: 'Baz'
           * 'Direct Content'
 
-  tree-ns = do
+  tree-ns =
     'Default:Root':
       Main:
         'Foo:Str': 'Foo'
@@ -23,6 +23,12 @@ describe \Tree !->
         Pasta:
           * 'Spaghettini'
           * 'Spaghettoni'
+
+  tree-empty =
+    Root:
+      Empty: {}
+      Null: null
+      Undef: undefined
       
   describe 'Creating trees with create-tree()' !->
     it 'should throw on empty input' !->
@@ -64,3 +70,11 @@ describe \Tree !->
       res.Food.Pasta .should.all.have.property \fullName, 'Foo:Pasta'
       res.Food.Pasta.0.content .should.equal 'Spaghettini'
       res.Food.Pasta.1.content .should.equal 'Spaghettoni'
+
+    it 'should work with empty nodes' !->
+      res = wbxml.create-tree tree-empty
+      res.name .should.equal 'Root'
+      res.Empty.children .should.be.empty
+      res.Null.children .should.be.empty
+      res .should.not.have.property 'Undef'
+  
