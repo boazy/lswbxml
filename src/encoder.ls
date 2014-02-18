@@ -12,9 +12,15 @@ else
 
 to-mbuint32 = (intval)->
   throw "Multibyte value should fit in a uint32" if intval >= 0xFFFFFFFF
-  result = Buffer 5
+  result = Buffer [0 0 0 0 0]
   for i from 4 to 0
-    result[i] = intval .&. 0x7f
+    b = intval .&. 0x7f
+    if i < 4
+      # Non-last byte
+      result[i] = b .|. 0x80
+    else
+      # Last byte
+      result[i] = b     
     intval = intval .>>. 7
     if intval == 0
       break
