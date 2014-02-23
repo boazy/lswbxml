@@ -7,7 +7,8 @@ require! {
   \gulp-bump
   through: through2
   through-map: \through2-map
-  # 'gulp-conventional-changelog'
+  conventional-changelog: \gulp-conventional-changelog
+  git: \gulp-git
 }
 
 paths =
@@ -85,11 +86,18 @@ gulp.task \bump ->
   return gulp.src \package.json
     .pipe gulp-bump gulp-env{type or gulp-env.t or \patch}
     .pipe gulp.dest '.'
+    .pipe git.add!
 
-gulp.task \tag <[bump]>, ->
+gulp.task \changelog <[bump]> ->
+  gulp.src <[ package.json CHANGELOG.md ]>
+    .pipe conventional-changelog!
+    .pipe gulp.dest '.'
+    .pipe git.add!
+
+gulp.task \tag <[changelog]>, ->
   pkg = require \./package.json
   v = "v#{pkg.version}"
-  message = "Release #v"
+  message = "chore(release): #v"
   gulp.src './'
     .pipe git.commit message
     .pipe git.tag v, message
