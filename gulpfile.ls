@@ -83,7 +83,7 @@ gulp.task \watch ->
     gulp.watch paths.tests-src, <[test]>
 
 gulp.task \bump ->
-  return gulp.src \package.json
+  gulp.src \package.json
     .pipe gulp-bump gulp-env{type or gulp-env.t or \patch}
     .pipe gulp.dest '.'
     .pipe git.add!
