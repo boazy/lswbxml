@@ -97,21 +97,3 @@ gulp.task \tag <[bump]>, ->
     .pipe git.push \origin \master \--tags
     .pipe gulp.dest './'
 
-# gulp.task \bump ->
-#   return gulp.src 'package.json'
-#     .pipe gulp-bump gulp-env{type or gulp-env.t or 'patch'}
-#     .pipe gulp.dest '.'
-
-# gulp.task \release <[ build bump ]> ->
-#   const jsonFile = require './package.json'
-#   const commitMsg = "chore(release): #{ jsonFile.version }"
-
-#   return gulp.src <[ package.json CHANGELOG.md ]>
-#     .pipe gulp-conventional-changelog!
-#     .pipe gulp.dest '.'
-#     .pipe gulp-exec('git add -A')
-#     .pipe gulp-exec("git commit -m '#{ commitMsg }'")
-#     .pipe gulp-exec("git tag -a #{ jsonFile.version } -m '#{ commitMsg }'")
-#     .pipe gulp-exec('git push')
-#     .pipe gulp-exec('git push --tags')
-#     .pipe gulp-exec('npm publish')
