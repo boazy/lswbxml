@@ -18,16 +18,21 @@
     "benchmark": "~1.0.0",
     "chai": "~1.8.1",
     "chai-things": "~0.2.0",
-    "diveSync": "~0.2.0",
-    "gaze": "~0.4.3",
-    "mkdirp": "~0.3.5",
     "mocha": "~1.17.0",
     "prettyjson": "~0.10.0",
-    "stream-to-buffer": "~0.1.0"
+    "stream-to-buffer": "~0.1.0",
+    "gulp": "~3.5.2",
+    "gulp-bump": "~0.1.5",
+    "gulp-filter": "~0.3.0",
+    "gulp-livescript": "~0.2.0",
+    "gulp-mocha": "~0.4.1",
+    "gulp-util": "~2.2.14",
+    "through2": "~0.4.1",
+    "through2-map": "~1.2.1"
   },
   "scripts": {
-    "prepublish": "slake build",
-    "test": "slake test"
+    "prepublish": "gulp build",
+    "test": "gulp test"
   },
   "optionalDependencies": {},
   "engines": {
