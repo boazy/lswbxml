@@ -6,6 +6,9 @@ describe \Tree !->
       Main:
         Str: 'Foo'
         Buf: Buffer [0x11, 0x22, 0x33]
+        Num: 42
+        True: true
+        False: false
       Secondary:
         Data:
           * Bar: 'Barbar'
@@ -45,6 +48,9 @@ describe \Tree !->
       res.name .should.equal 'Root'
       res.Main.Str.content .should.equal 'Foo'
       res.Main.Buf.content .should.be.eql Buffer [0x11, 0x22, 0x33]
+      res.Main.Num.content .should.equal \42
+      res.Main.True.content .should.be.equal \1
+      res.Main.False.content .should.be.equal \0
       res.Secondary.Data .should.have.length.of 3
       res.Secondary.Data.0.Bar.content .should.equal 'Barbar'
       res.Secondary.Data.1.name .should.equal 'Data'

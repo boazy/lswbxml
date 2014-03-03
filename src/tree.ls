@@ -114,7 +114,10 @@ export function create-tree(obj)
       else
         me.namespace = parent?.namespace
 
-      obj = obj.to-string! if typeof obj is \number
+      switch typeof obj
+      | \number  => obj = obj.to-string!
+      | \boolean => obj = if obj then \1 else \0
+
       if typeof obj is \string or obj instanceof Buffer
         me.add-content obj
       else
