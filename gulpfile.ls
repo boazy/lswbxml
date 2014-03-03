@@ -18,6 +18,18 @@ paths =
 
 gulp-env = gulp-util.env
 
+watching = false
+skip-errors-when-watching = (stream)->
+  if watching
+    stream.on \error (err)->
+      console.log err.to-string!
+      gulp-util.beep!
+      @emit \end
+  else
+    stream
+
+
+
 const BDD_WRAPPER_HEADER = new Buffer '''var _describe;
   _describe = function(s, cb){
     describe(s, function(){
@@ -73,9 +85,11 @@ gulp.task \build-tests ->
 
 gulp.task \test <[build build-tests]> ->
   gulp.src paths.tests-js
-      .pipe gulp-mocha {reporter: \spec}
+    .pipe gulp-mocha {reporter: \spec}
+    |> skip-errors-when-watching
 
 gulp.task \watch ->
+  watching := true
   if gulp-env.build-only
     gulp.watch paths.src,   <[build]>
   else
