@@ -150,15 +150,23 @@ file.on('open', function() {
 Building from source
 --------------------
 
-    slake build
+Install gulp with:
 
-or
+    npm install -g gulp
 
-    slake watch
+And run:
+
+    gulp build
+
+or:
+
+    gulp watch
 
 for continuous integration.
 
 Testing
 -------
 
-    slake test
+Run:
+
+    gulp test
