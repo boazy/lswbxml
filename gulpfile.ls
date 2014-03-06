@@ -28,8 +28,6 @@ skip-errors-when-watching = (stream)->
   else
     stream
 
-
-
 const BDD_WRAPPER_HEADER = new Buffer '''var _describe;
   _describe = function(s, cb){
     describe(s, function(){
@@ -72,6 +70,7 @@ gulp.task \build ->
   gulp.src paths.src
     .pipe gulp-livescript bare: true
     .pipe gulp.dest 'lib'
+    |> skip-errors-when-watching
 
 tests-filter = gulp-filter \**/*-test.js
 
@@ -82,6 +81,7 @@ gulp.task \build-tests ->
     .pipe postprocess-tests!
     .pipe tests-filter.restore!
     .pipe gulp.dest 'testjs'
+    |> skip-errors-when-watching
 
 gulp.task \test <[build build-tests]> ->
   gulp.src paths.tests-js
