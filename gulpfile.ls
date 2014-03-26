@@ -1,5 +1,6 @@
 require! {
   gulp
+  \gulp-clean
   \gulp-util
   \gulp-livescript
   \gulp-mocha
@@ -27,6 +28,9 @@ skip-errors-when-watching = (stream)->
       @emit \end
   else
     stream
+
+pipe = (dest)->
+  (src)-> src.pipe dest
 
 const BDD_WRAPPER_HEADER = new Buffer '''var _describe;
   _describe = function(s, cb){
@@ -76,16 +80,16 @@ tests-filter = gulp-filter \**/*-test.js
 
 gulp.task \build-tests ->
   gulp.src paths.tests-src
-    .pipe gulp-livescript bare: true
-    .pipe tests-filter
-    .pipe postprocess-tests!
-    .pipe tests-filter.restore!
-    .pipe gulp.dest 'testjs'
+    |> pipe gulp-livescript bare: true
     |> skip-errors-when-watching
+    |> pipe tests-filter
+    |> pipe postprocess-tests!
+    |> pipe tests-filter.restore!
+    |> pipe gulp.dest 'testjs'
 
 gulp.task \test <[build build-tests]> ->
   gulp.src paths.tests-js
-    .pipe gulp-mocha {reporter: \spec}
+    |> pipe gulp-mocha {reporter: \spec}
     |> skip-errors-when-watching
 
 gulp.task \watch ->
@@ -119,3 +123,6 @@ gulp.task \tag <[changelog]>, ->
     .pipe git.push \origin \master \--tags
     .pipe gulp.dest './'
 
+gulp.task \clean ->
+  gulp.src <[lib testjs]>
+    .pipe gulp-clean!
