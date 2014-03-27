@@ -48,7 +48,7 @@ const BDD_WRAPPER_FOOTER = new Buffer '\n})(_describe);\n'
 postprocess-tests = ->
   through-map {object-mode: true}, (file)->
     is-stream = typeof file?.contents?.on is \function and typeof file?.contents?.pipe is 'function'
-    is-buffer= file?.contents instanceof Buffer
+    is-buffer = file?.contents instanceof Buffer
     if is-stream
       file.contents = through do
         # Per-chunk
