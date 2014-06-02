@@ -94,7 +94,7 @@ gulp.task \test <[build build-tests]> ->
 
 gulp.task \watch ->
   watching := true
-  if gulp-env.build-only
+  if gulp-env['build-only']
     gulp.watch paths.src,   <[build]>
   else
     gulp.watch paths.src,       <[test]>
